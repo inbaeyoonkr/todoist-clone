@@ -6,7 +6,7 @@
 import moment from 'moment';
 import { useState, useEffect } from 'react';
 import { firebase } from '../firebase';
-import { collatedTasksExists } from '../helpers';
+import { collatedTasksExist } from '../helpers';
 
 // useTasks 라는 custom hook을 만든다.
 export const useTasks = selectedProject => {
@@ -14,12 +14,13 @@ export const useTasks = selectedProject => {
   const [archivedTasks, setArchivedTasks] = useState([]);
 
   useEffect(() => {
-    let unsubscribe = firebase.firestore
+    let unsubscribe = firebase
+      .firestore()
       .collection('tasks')
       .where('userId', '==', 'wd8K69c1RJaEvkJC0qGs');
 
     unsubscribe =
-      selectedProject && !collatedTasksExists(selectedProject)
+      selectedProject && !collatedTasksExist(selectedProject)
         ? (unsubscribe = unsubscribe.where('projectId', '==', selectedProject))
         : selectedProject === 'TODAY'
         ? (unsubscribe = unsubscribe.where(
@@ -54,4 +55,29 @@ export const useTasks = selectedProject => {
   }, [selectedProject]);
 
   return { tasks, archivedTasks };
+};
+
+export const useProjects = () => {
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection('projects')
+      .where('userId', '==', 'wd8K69c1RJaEvkJC0qGs')
+      .orderBy('projectId')
+      .get()
+      .then(snapshot => {
+        const allProjects = snapshot.docs.map(project => ({
+          ...project.data(), // give me all projects
+          docId: project.id
+        }));
+
+        if (JSON.stringify(allProjects) !== JSON.stringify(projects)) {
+          setProjects(allProjects);
+        }
+      });
+  }, [projects]);
+
+  return { projects, setProjects };
 };

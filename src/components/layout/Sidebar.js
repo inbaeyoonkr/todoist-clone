@@ -3,8 +3,7 @@ import {
   FaChevronDown,
   FaInbox,
   FaRegCalendarAlt,
-  FaRegCalendar,
-  FaPizzaSlice
+  FaRegCalendar
 } from 'react-icons/fa';
 
 export const Sidebar = () => (
