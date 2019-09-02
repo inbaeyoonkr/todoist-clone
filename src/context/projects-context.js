@@ -13,4 +13,5 @@ export const ProjectsProvider = ({ children }) => {
   );
 };
 
+// consumer 위한 ...
 export const useProjectsValue = () => useContext(ProjectsContext);
