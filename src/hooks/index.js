@@ -57,6 +57,7 @@ export const useTasks = selectedProject => {
   return { tasks, archivedTasks };
 };
 
+// Custom hook : useProjects
 export const useProjects = () => {
   const [projects, setProjects] = useState([]);
 
